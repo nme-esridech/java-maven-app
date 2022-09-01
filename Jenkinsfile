@@ -1,38 +1,36 @@
-def gv
-
 pipeline {
-    agent any
-    stages {
-        stage("init") {
-            steps {
-                script {
-                    gv = load "script.groovy"
-                }
-            }
+  
+  agent any
+  tools {
+    maven 'Maven'
+  }
+  stages {
+    
+    stage("build jar"){      
+      steps {
+        echo 'build the application'
+        sh 'maven package'
+      }
+    }
+
+    stage("build image"){      
+      steps {
+        echo 'building the docker image'
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASS', usernameVariable: 'USER')]){
+          sh 'docker build -t nme4esri/my-repo:jma-2.0 .'
+          sh "echo $PASS | docker login -u $USER --password-stdin"
+          sh 'docker push nme4esri/my-repo:jma-2.0'
         }
-        stage("build jar") {
-            steps {
-                script {
-                    echo "building jar"
-                    //gv.buildJar()
-                }
-            }
+
+      }
+    }
+
+    stage("deploy"){
+
+      steps {
+        echo 'deploy the application'
+                
         }
-        stage("build image") {
-            steps {
-                script {
-                    echo "building image"
-                    //gv.buildImage()
-                }
-            }
-        }
-        stage("deploy") {
-            steps {
-                script {
-                    echo "deploying"
-                    //gv.deployApp()
-                }
-            }
-        }
-    }   
+    }    
+  }
 }
