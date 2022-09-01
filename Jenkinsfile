@@ -1,11 +1,10 @@
-pipeline {
-  
+pipeline {  
   agent any
   tools {
     maven 'Maven'
   }
-  stages {
-    
+
+  stages {  
     stage("build jar"){      
       steps {
         echo 'build the application'
