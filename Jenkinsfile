@@ -1,40 +1,35 @@
 pipeline {
   
   agent any
-  parameters {
-      choice(name: 'VERSION', choices: ['1.1.0','1.2.0','1.3.0'], description: '')
-      booleanParam(name: 'executeTests', defaultValue: true, description: '')
+  tools {
+    maven 'Maven'
   }
-
   stages {
     
-    stage("build"){
-      
+    stage("build jar"){      
       steps {
         echo 'build the application'
+        sh 'maven package'
       }
     }
-    
-    stage("test"){
 
-        when {
-            expression {
-                params.executeTests
-            }
+    stage("build image"){      
+      steps {
+        echo 'building the docker image'
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASS', usernameVariable: 'USER')]){
+          sh 'docker build -t nme4esri/my-repo:jma-2.0 .'
+          sh "echo $PASS | docker login -u $USER --password-stdin"
+          sh 'docker push nme4esri/my-repo:jma-2.0'
         }
 
-      steps {
-        echo 'test the application'
-
       }
     }
-    
+
     stage("deploy"){
 
       steps {
         echo 'deploy the application'
-        echo "deploying version ${params.VERSION}"
-        
+                
         }
     }    
   }
