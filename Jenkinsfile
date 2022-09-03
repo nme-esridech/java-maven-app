@@ -2,7 +2,7 @@ pipeline {
   
   agent any
   tools {
-    maven 'Maven'
+    maven 'Maven-3.8.6'
   }
   stages {
     
@@ -16,10 +16,11 @@ pipeline {
     stage("build image"){      
       steps {
         echo 'building the docker image'
-        withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASS', usernameVariable: 'USER')]){
-          sh 'docker build -t nme4esri/my-repo:jma-2.0 .'
-          sh "echo $PASS | docker login -u $USER --password-stdin"
-          sh 'docker push nme4esri/my-repo:jma-2.0'
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+            sh 'docker build -t nme4esri/my-repo:jma-2.0 .'
+            sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
+            sh 'docker push nme4esri/my-repo:jma-2.0'
+    }
         }
 
       }
