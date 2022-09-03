@@ -20,6 +20,7 @@ pipeline {
           //  sh "docker build -t nme4esri/my-repo:jma-2.0 ."
           //  sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin"
           //  sh "docker push nme4esri/my-repo:jma-2.0"
+          echo "testoutput"
           }
         }
       }
