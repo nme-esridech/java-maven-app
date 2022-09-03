@@ -1,3 +1,4 @@
+def gv
 pipeline {  
   agent any
   tools {
@@ -5,32 +6,47 @@ pipeline {
   }
 
   stages {  
-    stage("build jar"){      
-      steps {
-        echo 'build the application'
-        sh "mvn package"
-      }
-    }
-
-    stage("build image"){      
+    stage("init") {
       steps {
         script {
-          echo 'building the docker image'
-          withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-            sh 'docker build -t nme4esri/my-repo:jma-2.0 .'
-            sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
-            sh 'docker push nme4esri/my-repo:jma-2.0'
-          }
+          gv = load "script.groovy"
         }
       }
     }
 
-    stage("deploy"){
-
-      steps {
-        echo 'deploy the application'
-                
+    stage("build jar"){   
+      when {
+        expression {
+          BRANCH_NAME == "master"
         }
+      }   
+      steps {
+        script {
+          gv.buildJar()
+        }
+      }
+    }
+
+    stage("build image"){  
+      when {
+        expression {
+          BRANCH_NAME == "master"
+        }
+      }          
+      steps {
+        script {
+          gv.buildImage()
+        }
+      }
+    }
+    
+
+    stage("deploy"){
+      steps {
+        script {
+          gv.deployApp()
+        }
+      }
     }    
   }
 }
