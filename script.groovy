@@ -4,6 +4,7 @@ def testJar(){
 
 def buildJar(){
     echo 'build the application'
+    echo 'test for multibranch webhook'
     sh "mvn package"
 }
 
