@@ -14,6 +14,15 @@ pipeline {
       }
     }
 
+  stages {  
+    stage("test") {
+      steps {
+        script {
+          echo "Testing the application"
+        }
+      }
+    }
+    
     stage("build jar"){   
       when {
         expression {
