@@ -18,6 +18,7 @@ pipeline {
       steps {
         script {
           echo "Testing the application"
+          echo "noch ein test"
         }
       }
     }
