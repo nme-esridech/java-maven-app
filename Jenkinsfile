@@ -14,12 +14,15 @@ pipeline {
       }
     }
 
-    stage("build jar"){   
-      when {
-        expression {
-          BRANCH_NAME == "master"
+    stage("test") {
+      steps {
+        script {
+          gv.testJar()
         }
-      }   
+      }
+    }
+    
+    stage("build jar"){      
       steps {
         script {
           gv.buildJar()
@@ -27,12 +30,7 @@ pipeline {
       }
     }
 
-    stage("build image"){  
-      when {
-        expression {
-          BRANCH_NAME == "master"
-        }
-      }          
+    stage("build image"){           
       steps {
         script {
           gv.buildImage()
