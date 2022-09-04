@@ -17,8 +17,7 @@ pipeline {
     stage("test") {
       steps {
         script {
-          gv.testJar()
-          echo "noch ein Test"
+          gv.testJar()          
         }
       }
     }
