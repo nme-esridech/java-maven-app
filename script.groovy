@@ -1,5 +1,6 @@
 def testJar(){
-    echo 'test the application'    
+    echo 'test the application'   
+    echo 'test webhook'
 }
 
 def buildJar(){
