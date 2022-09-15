@@ -1,6 +1,6 @@
 def buildJar(){
     echo 'build the application'
-    echo 'test commit for webhook'
+    echo 'test commit for webhook2'
     sh "mvn package"
 }
 
