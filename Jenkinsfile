@@ -1,51 +1,31 @@
-def gv
-pipeline {  
-  agent any
-  tools {
-    maven 'Maven-3.8.6'
-  }
-
-  stages {  
-    stage("init") {
-      steps {
-        script {
-          gv = load "script.groovy"
+pipeline {
+    agent none
+    stages {
+        stage('test') {
+            steps {
+                script {
+                    echo "Testing the application..."
+                }
+            }
         }
-      }
+        stage('build') {
+            steps {
+                script {
+                    echo "Building the application..."
+                }
+            }
+        }
+        stage('deploy') {
+            steps {
+                script {
+                    def dockerCmd = 'docker run'
+                    sshagent(['ec2-server-key'])
+                    {
+                        sh 'ssh -o StrictHostKeyChecking=no ec2-user@3.75.76.116'
+                        
+                    }
+                }
+            }
+        }
     }
-
-    stage("test") {
-      steps {
-        script {
-          echo "Testing the application"
-          echo "noch ein test"
-        }
-      }
-    }
-    
-    stage("build jar"){      
-      steps {
-        script {
-          gv.buildJar()
-        }
-      }
-    }
-
-    stage("build image"){           
-      steps {
-        script {
-          gv.buildImage()
-        }
-      }
-    }
-    
-
-    stage("deploy"){
-      steps {
-        script {
-          gv.deployApp()
-        }
-      }
-    }    
-  }
 }
