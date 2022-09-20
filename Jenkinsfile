@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     echo 'deploying docker image to EC2...'
-                    
+                    echo "My image name is ${env.IMAGE_NAME}"
                     def shellCmd = "bash ./server-cmds.sh ${IMAGE_NAME}"
 
                     sshagent(['ec2-server-key'])
